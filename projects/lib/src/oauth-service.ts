@@ -663,24 +663,35 @@ export class OAuthService extends AuthConfig implements OnDestroy {
         password: string,
         headers: HttpHeaders = new HttpHeaders()
     ): Promise<object> {
+        const parameters = {
+            username: userName,
+            password: password,
+        };
+        return this.fetchTokenUsingGrant('password', parameters, headers);
+    }
+
+    /**
+     * Uses a custom grant type to retrieve tokens.
+     * @param grantType Grant type.
+     * @param parameters Parameters to pass.
+     * @param headers Optional additional HTTP headers.
+     */
+    public fetchTokenUsingGrant(grantType: string, parameters: object, headers: HttpHeaders = new HttpHeaders()): Promise<TokenResponse> {
         if (!this.validateUrlForHttps(this.tokenEndpoint)) {
             throw new Error(
                 'tokenEndpoint must use https, or config value for property requireHttps must allow http'
             );
         }
 
-        return new Promise((resolve, reject) => {
-            /**
-             * A `HttpParameterCodec` that uses `encodeURIComponent` and `decodeURIComponent` to
-             * serialize and parse URL parameter keys and values.
-             *
-             * @stable
-             */
-            let params = new HttpParams({ encoder: new WebHttpUrlEncodingCodec() })
-                .set('grant_type', 'password')
-                .set('scope', this.scope)
-                .set('username', userName)
-                .set('password', password);
+        /**
+         * A `HttpParameterCodec` that uses `encodeURIComponent` and `decodeURIComponent` to
+         * serialize and parse URL parameter keys and values.
+         *
+         * @stable
+         */
+        let params = new HttpParams({ encoder: new WebHttpUrlEncodingCodec() })
+            .set('grant_type', grantType)
+            .set('scope', this.scope);
 
             if (this.useHttpBasicAuth) {
                 const header = btoa(`${this.clientId}:${this.dummyClientSecret}`);
@@ -697,39 +708,53 @@ export class OAuthService extends AuthConfig implements OnDestroy {
                 params = params.set('client_secret', this.dummyClientSecret);
             }
 
-            if (this.customQueryParams) {
-                for (const key of Object.getOwnPropertyNames(this.customQueryParams)) {
-                    params = params.set(key, this.customQueryParams[key]);
-                }
+        if (this.customQueryParams) {
+            for (const key of Object.getOwnPropertyNames(this.customQueryParams)) {
+                params = params.set(key, this.customQueryParams[key]);
             }
+        }
 
-            headers = headers.set(
-                'Content-Type',
-                'application/x-www-form-urlencoded'
-            );
+        // set explicit parameters last, to allow overwriting
+        for (const key of Object.keys(parameters)) {
+            params = params.set(key, parameters[key]);
+        }
 
-            this.http
-                .post<TokenResponse>(this.tokenEndpoint, params, { headers })
-                .subscribe(
-                    tokenResponse => {
-                        this.debug('tokenResponse', tokenResponse);
-                        this.storeAccessTokenResponse(
-                            tokenResponse.access_token,
-                            tokenResponse.refresh_token,
-                            tokenResponse.expires_in,
-                            tokenResponse.scope
-                        );
+        headers = headers.set(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
 
-                        this.eventsSubject.next(new OAuthSuccessEvent('token_received'));
-                        resolve(tokenResponse);
-                    },
-                    err => {
-                        this.logger.error('Error performing password flow', err);
-                        this.eventsSubject.next(new OAuthErrorEvent('token_error', err));
-                        reject(err);
-                    }
+        return this.http
+            .post<TokenResponse>(this.tokenEndpoint, params, { headers })
+            .toPromise()
+            .then(tokenResponse => {
+                this.debug('tokenResponse', tokenResponse);
+                this.storeAccessTokenResponse(
+                    tokenResponse.access_token,
+                    tokenResponse.refresh_token,
+                    tokenResponse.expires_in,
+                    tokenResponse.scope
                 );
-        });
+
+                if (tokenResponse.id_token) {
+                    return this.processIdToken(tokenResponse.id_token, tokenResponse.access_token)
+                        .then(idTokenResult => {
+                            this.storeIdToken(idTokenResult);
+                            return tokenResponse;
+                        });
+                }
+
+                return tokenResponse;
+            })
+            .then(tokenResponse => {
+                this.eventsSubject.next(new OAuthSuccessEvent('token_received'));
+                return tokenResponse;
+            })
+            .catch(err => {
+                this.logger.error(`Error performing ${grantType} flow`, err);
+                this.eventsSubject.next(new OAuthErrorEvent('token_error', err));
+                throw err;
+            });
     }
 
     /**
@@ -1264,7 +1289,7 @@ export class OAuthService extends AuthConfig implements OnDestroy {
         }
 
         return url;
-        
+
     }
 
     initImplicitFlowInternal(
@@ -1503,32 +1528,32 @@ export class OAuthService extends AuthConfig implements OnDestroy {
                 (tokenResponse) => {
                     this.debug('refresh tokenResponse', tokenResponse);
                     this.storeAccessTokenResponse(
-                        tokenResponse.access_token, 
-                        tokenResponse.refresh_token, 
+                        tokenResponse.access_token,
+                        tokenResponse.refresh_token,
                         tokenResponse.expires_in,
                         tokenResponse.scope);
 
                     if (this.oidc && tokenResponse.id_token) {
-                        this.processIdToken(tokenResponse.id_token, tokenResponse.access_token).  
+                        this.processIdToken(tokenResponse.id_token, tokenResponse.access_token).
                         then(result => {
                             this.storeIdToken(result);
-            
+
                             this.eventsSubject.next(new OAuthSuccessEvent('token_received'));
                             this.eventsSubject.next(new OAuthSuccessEvent('token_refreshed'));
-            
+
                             resolve(tokenResponse);
                         })
                         .catch(reason => {
                             this.eventsSubject.next(new OAuthErrorEvent('token_validation_error', reason));
                             console.error('Error validating tokens');
                             console.error(reason);
-            
+
                             reject(reason);
                         });
                     } else {
                         this.eventsSubject.next(new OAuthSuccessEvent('token_received'));
                         this.eventsSubject.next(new OAuthSuccessEvent('token_refreshed'));
-            
+
                         resolve(tokenResponse);
                     }
                 },
@@ -1688,7 +1713,7 @@ export class OAuthService extends AuthConfig implements OnDestroy {
     ): boolean {
         const savedNonce = this._storage.getItem('nonce');
         if (savedNonce !== nonceInState) {
-            
+
             const err = 'Validating access_token failed, wrong state/nonce.';
             console.error(err, savedNonce, nonceInState);
             return false;
