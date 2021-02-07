@@ -93,6 +93,7 @@
                                         <a href="#expires_in">expires_in</a>
                                 </li>
                                 <li>
+                                            <span class="modifier">Optional</span>
                                         <a href="#id_token">id_token</a>
                                 </li>
                                 <li>
@@ -200,6 +201,11 @@
                                         </td>
                                     </tr>
 
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
 
 
 
@@ -470,8 +476,8 @@ export interface ParsedIdToken {
  * http://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint
  */
 export interface TokenResponse {
+  id_token?: string;
   access_token: string;
-  id_token: string;
   token_type: string;
   expires_in: number;
   refresh_token: string;

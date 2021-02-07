@@ -784,7 +784,7 @@ export class OAuthService extends AuthConfig implements OnDestroy {
 
     const parameters = {
       username: userName,
-      password: password,
+      password: password
     };
 
     return this.fetchTokenUsingGrant('password', parameters, headers);
@@ -796,7 +796,11 @@ export class OAuthService extends AuthConfig implements OnDestroy {
    * @param parameters Parameters to pass.
    * @param headers Optional additional HTTP headers.
    */
-  public fetchTokenUsingGrant(grantType: string, parameters: object, headers: HttpHeaders = new HttpHeaders()): Promise<TokenResponse> {
+  public fetchTokenUsingGrant(
+    grantType: string,
+    parameters: object,
+    headers: HttpHeaders = new HttpHeaders()
+  ): Promise<TokenResponse> {
     return new Promise((resolve, reject) => {
       /**
        * A `HttpParameterCodec` that uses `encodeURIComponent` and `decodeURIComponent` to
@@ -806,7 +810,7 @@ export class OAuthService extends AuthConfig implements OnDestroy {
        */
       let params = new HttpParams({ encoder: new WebHttpUrlEncodingCodec() })
         .set('grant_type', 'password')
-        .set('scope', this.scope)
+        .set('scope', this.scope);
 
       if (this.useHttpBasicAuth) {
         const header = btoa(`${this.clientId}:${this.dummyClientSecret}`);
