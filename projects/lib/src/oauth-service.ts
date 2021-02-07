@@ -782,6 +782,21 @@ export class OAuthService extends AuthConfig implements OnDestroy {
       'tokenEndpoint'
     );
 
+    const parameters = {
+      username: userName,
+      password: password,
+    };
+
+    return this.fetchTokenUsingGrant('password', parameters, headers);
+  }
+
+  /**
+   * Uses a custom grant type to retrieve tokens.
+   * @param grantType Grant type.
+   * @param parameters Parameters to pass.
+   * @param headers Optional additional HTTP headers.
+   */
+  public fetchTokenUsingGrant(grantType: string, parameters: object, headers: HttpHeaders = new HttpHeaders()): Promise<TokenResponse> {
     return new Promise((resolve, reject) => {
       /**
        * A `HttpParameterCodec` that uses `encodeURIComponent` and `decodeURIComponent` to
@@ -792,8 +807,6 @@ export class OAuthService extends AuthConfig implements OnDestroy {
       let params = new HttpParams({ encoder: new WebHttpUrlEncodingCodec() })
         .set('grant_type', 'password')
         .set('scope', this.scope)
-        .set('username', userName)
-        .set('password', password);
 
       if (this.useHttpBasicAuth) {
         const header = btoa(`${this.clientId}:${this.dummyClientSecret}`);
@@ -812,6 +825,11 @@ export class OAuthService extends AuthConfig implements OnDestroy {
         for (const key of Object.getOwnPropertyNames(this.customQueryParams)) {
           params = params.set(key, this.customQueryParams[key]);
         }
+      }
+
+      // set explicit parameters last, to allow overwriting
+      for (const key of Object.keys(parameters)) {
+        params = params.set(key, parameters[key]);
       }
 
       headers = headers.set(
