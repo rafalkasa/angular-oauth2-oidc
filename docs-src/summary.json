@@ -8,13 +8,14 @@
         "file": "preserving-state.md"
     },
     {
-        "title": "Code Flow + PCKE",
-        "file": "code-flow.md"
+        "title": "Refreshing a Token",
+        "file": "token-refresh.md"
     },
     {
-        "title": "Refreshing a Token",
+        "title": "Silent Refresh",
         "file": "silent-refresh.md"
     },
+
     {
         "title": "Working with HttpInterceptors",
         "file": "interceptors.md"
@@ -22,6 +23,10 @@
     {
         "title": "Callback after login",
         "file": "callback-after-login.md"
+    },
+    {
+        "title": "Popup-based Login",
+        "file": "popup.md"
     },
     {
         "title": "Custom Query Parameters",
@@ -60,8 +65,8 @@
         "file": "systemjs.md"
     },
     {
-        "title": "Original Config API",
-        "file": "implicit-flow-config-discovery.md"
+        "title": "Using Implicit Flow",
+        "file": "implicit-flow.md"
     },
     {
         "title": "Using Password Flow",
@@ -70,5 +75,32 @@
     {
         "title": "Configure custom OAuthStorage",
         "file": "configure-custom-oauthstorage.md"
+    },
+    {
+        "title": "Manually Skipping Login Form",
+        "file": "skipping-login-form.md"
+    },
+    {
+        "title": "Original Config API",
+        "file": "implicit-flow-config-discovery.md"
+    },
+    {
+        "title": "Authorization Servers",
+        "file": "authsvr.md",
+        "children": [
+            {
+                "title": "Using Identity Server",
+                "file": "authsvr-idsvr.md"
+            },
+            {
+                "title": "Using Keycloak",
+                "file": "authsvr-keycloak.md"
+            },
+            {
+                "title": "Auth0",
+                "file": "authsvr-auth0.md"
+            }
+        ]
     }
+
 ]

@@ -1,25 +1,6 @@
-# Refreshing a Token 
+## Refreshing when using Implicit Flow (Implicit Flow and Code Flow)
 
-The strategy to use for refreshing your token differs between implicit flow and code flow. Hence, you find here one separate section for both of them.
-
-The last section shows how to automate refreshing for both flows.
-
-## Refreshing when using Code Flow (not Implicit Flow!)
-
-> For refreshing a token with implicit flow, please see section below!
-
-When using code flow, you can get an ``refresh_token``. While the original standard DOES NOT allow this for SPAs, the mentioned document proposes to ease this limitation. However, it specifies a list of requirements one should take care about before using refresh_tokens. Please make sure you respect those requirements.
-
-Please also note, that you have to request the ``offline_access`` scope to get an refresh token.
-
-To refresh your token, just call the ``refresh`` method:
-
-```typescript
-this.oauthService.refresh();
-```
-
-
-## Refreshing when using Implicit Flow (not Code Flow!)
+**Notes for Code Flow**: You can also use this strategy for refreshing tokens when using code flow. However, please note, the strategy described within [Token Refresh](./token-refresh.md) is far easier in this case.
 
 To refresh your tokens when using implicit flow you can use a silent refresh. This is a well-known solution that compensates the fact that implicit flow does not allow for issuing a refresh token. It uses a hidden iframe to get another token from the auth server. When the user is there still logged in (by using a cookie) it will respond without user interaction and provide new tokens.
 
@@ -42,6 +23,11 @@ export const authConfig: AuthConfig = {
 
   // URL of the SPA to redirect the user after silent refresh
   silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',
+
+  // defaults to true for implicit flow and false for code flow
+  // as for code code the default is using a refresh_token
+  // Also see docs section 'Token Refresh'
+  useSilentRefresh: true,
 
   // The SPA's id. The SPA is registerd with this id at the auth-server
   clientId: 'spa-demo',
@@ -66,9 +52,34 @@ This file is loaded into the hidden iframe after getting new tokens. Its only ta
 <html>
 <body>
     <script>
-    parent.postMessage(location.hash, location.origin);
+        (window.opener || window.parent).postMessage(location.hash || ('#' + location.search), location.origin);
     </script>
 </body>
+</html>
+```
+
+This simple implementation within silent-refresh.html is sufficient in most cases. It takes care of the hash fragment as well as of the query string (property search). For **edge cases** you need to check if the received hash fragment is a token response. For this, please go with the following **more advanced implementation**:
+
+```html
+<html>
+    <body>
+        <script>
+            var checks = [/[\?|&|#]code=/, /[\?|&|#]error=/, /[\?|&|#]token=/, /[\?|&|#]id_token=/];
+
+            function isResponse(str) {
+                var count = 0;
+                if (!str) return false;
+                for(var i=0; i<checks.length; i++) {
+                    if (str.match(checks[i])) return true;
+                }
+                return false;
+            }
+
+            var message = isResponse(location.hash) ? location.hash : '#' + location.search;
+
+            (window.opener || window.parent).postMessage(message, location.origin);
+        </script>
+    </body>
 </html>
 ```
 

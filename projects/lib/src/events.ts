@@ -1,6 +1,5 @@
 export type EventType =
   | 'discovery_document_loaded'
-  | 'received_first_token'
   | 'jwks_load_error'
   | 'invalid_nonce_in_state'
   | 'discovery_document_load_error'
@@ -20,7 +19,10 @@ export type EventType =
   | 'session_changed'
   | 'session_error'
   | 'session_terminated'
-  | 'logout';
+  | 'logout'
+  | 'popup_closed'
+  | 'popup_blocked'
+  | 'token_revoke_error';
 
 export abstract class OAuthEvent {
   constructor(readonly type: EventType) {}

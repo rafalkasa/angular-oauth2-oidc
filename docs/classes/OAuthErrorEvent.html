@@ -85,7 +85,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">projects/lib/src/events.ts:41</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">projects/lib/src/events.ts:43</a></div>
                             </td>
                         </tr>
 
@@ -160,7 +160,6 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">export type EventType &#x3D;
   | &#x27;discovery_document_loaded&#x27;
-  | &#x27;received_first_token&#x27;
   | &#x27;jwks_load_error&#x27;
   | &#x27;invalid_nonce_in_state&#x27;
   | &#x27;discovery_document_load_error&#x27;
@@ -180,7 +179,10 @@
   | &#x27;session_changed&#x27;
   | &#x27;session_error&#x27;
   | &#x27;session_terminated&#x27;
-  | &#x27;logout&#x27;;
+  | &#x27;logout&#x27;
+  | &#x27;popup_closed&#x27;
+  | &#x27;popup_blocked&#x27;
+  | &#x27;token_revoke_error&#x27;;
 
 export abstract class OAuthEvent {
   constructor(readonly type: EventType) {}
@@ -236,6 +238,7 @@ export class OAuthErrorEvent extends OAuthEvent {
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
             var COMPODOC_CURRENT_PAGE_URL = 'OAuthErrorEvent.html';
+            var MAX_SEARCH_RESULTS = 15;
        </script>
 
        <script src="../js/libs/custom-elements.min.js"></script>

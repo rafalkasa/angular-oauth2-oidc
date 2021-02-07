@@ -66,16 +66,19 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                         <a href="additional-documentation/preserving-state-(like-the-requested-url).html" data-type="entity-link" data-context-id="additional">Preserving State (like the Requested URL)</a>
                                     </li>
                                     <li class="link ">
-                                        <a href="additional-documentation/code-flow-+-pcke.html" data-type="entity-link" data-context-id="additional">Code Flow + PCKE</a>
+                                        <a href="additional-documentation/refreshing-a-token.html" data-type="entity-link" data-context-id="additional">Refreshing a Token</a>
                                     </li>
                                     <li class="link ">
-                                        <a href="additional-documentation/refreshing-a-token.html" data-type="entity-link" data-context-id="additional">Refreshing a Token</a>
+                                        <a href="additional-documentation/silent-refresh.html" data-type="entity-link" data-context-id="additional">Silent Refresh</a>
                                     </li>
                                     <li class="link ">
                                         <a href="additional-documentation/working-with-httpinterceptors.html" data-type="entity-link" data-context-id="additional">Working with HttpInterceptors</a>
                                     </li>
                                     <li class="link ">
                                         <a href="additional-documentation/callback-after-login.html" data-type="entity-link" data-context-id="additional">Callback after login</a>
+                                    </li>
+                                    <li class="link ">
+                                        <a href="additional-documentation/popup-based-login.html" data-type="entity-link" data-context-id="additional">Popup-based Login</a>
                                     </li>
                                     <li class="link ">
                                         <a href="additional-documentation/custom-query-parameters.html" data-type="entity-link" data-context-id="additional">Custom Query Parameters</a>
@@ -105,13 +108,39 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                         <a href="additional-documentation/using-systemjs.html" data-type="entity-link" data-context-id="additional">Using SystemJS</a>
                                     </li>
                                     <li class="link ">
-                                        <a href="additional-documentation/original-config-api.html" data-type="entity-link" data-context-id="additional">Original Config API</a>
+                                        <a href="additional-documentation/using-implicit-flow.html" data-type="entity-link" data-context-id="additional">Using Implicit Flow</a>
                                     </li>
                                     <li class="link ">
                                         <a href="additional-documentation/using-password-flow.html" data-type="entity-link" data-context-id="additional">Using Password Flow</a>
                                     </li>
                                     <li class="link ">
                                         <a href="additional-documentation/configure-custom-oauthstorage.html" data-type="entity-link" data-context-id="additional">Configure custom OAuthStorage</a>
+                                    </li>
+                                    <li class="link ">
+                                        <a href="additional-documentation/manually-skipping-login-form.html" data-type="entity-link" data-context-id="additional">Manually Skipping Login Form</a>
+                                    </li>
+                                    <li class="link ">
+                                        <a href="additional-documentation/original-config-api.html" data-type="entity-link" data-context-id="additional">Original Config API</a>
+                                    </li>
+                                    <li class="chapter inner">
+                                        <a data-type="chapter-link" href="additional-documentation/authorization-servers.html" data-context-id="additional">
+                                            <div class="menu-toggler linked" data-toggle="collapse" ${ isNormalMode ?
+                                            'data-target="#additional-page-64bc69bb1a8182c122d3c7f9e3c63e2d"' : 'data-target="#xs-additional-page-64bc69bb1a8182c122d3c7f9e3c63e2d"' }>
+                                                <span class="link-name">Authorization Servers</span>
+                                                <span class="icon ion-ios-arrow-down"></span>
+                                            </div>
+                                        </a>
+                                        <ul class="links collapse" ${ isNormalMode ? 'id="additional-page-64bc69bb1a8182c122d3c7f9e3c63e2d"' : 'id="xs-additional-page-64bc69bb1a8182c122d3c7f9e3c63e2d"' }>
+                                            <li class="link for-chapter2">
+                                                <a href="additional-documentation/authorization-servers/using-identity-server.html" data-type="entity-link" data-context="sub-entity" data-context-id="additional">Using Identity Server</a>
+                                            </li>
+                                            <li class="link for-chapter2">
+                                                <a href="additional-documentation/authorization-servers/using-keycloak.html" data-type="entity-link" data-context="sub-entity" data-context-id="additional">Using Keycloak</a>
+                                            </li>
+                                            <li class="link for-chapter2">
+                                                <a href="additional-documentation/authorization-servers/auth0.html" data-type="entity-link" data-context="sub-entity" data-context-id="additional">Auth0</a>
+                                            </li>
+                                        </ul>
                                     </li>
                         </ul>
                     </li>
@@ -145,7 +174,7 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/AuthConfig.html" data-type="entity-link">AuthConfig</a>
                             </li>
                             <li class="link">
-                                <a href="classes/CryptoHandler.html" data-type="entity-link">CryptoHandler</a>
+                                <a href="classes/HashHandler.html" data-type="entity-link">HashHandler</a>
                             </li>
                             <li class="link">
                                 <a href="classes/JwksValidationHandler.html" data-type="entity-link">JwksValidationHandler</a>
@@ -205,6 +234,12 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <span class="icon ion-ios-arrow-down"></span>
                             </div>
                             <ul class="links collapse " ${ isNormalMode ? 'id="injectables-links"' : 'id="xs-injectables-links"' }>
+                                <li class="link">
+                                    <a href="injectables/DefaultHashHandler.html" data-type="entity-link">DefaultHashHandler</a>
+                                </li>
+                                <li class="link">
+                                    <a href="injectables/MemoryStorage.html" data-type="entity-link">MemoryStorage</a>
+                                </li>
                                 <li class="link">
                                     <a href="injectables/OAuthService.html" data-type="entity-link">OAuthService</a>
                                 </li>
