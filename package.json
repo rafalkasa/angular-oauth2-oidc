@@ -1,6 +1,6 @@
 {
-  "name": "angular-oauth2-oidc-insure",
-  "version": "9.2.0",
+  "name": "starter",
+  "version": "9.2.2",
   "license": "MIT",
   "scripts": {
     "release": "standard-version",

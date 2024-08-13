@@ -281,9 +281,9 @@ export class OAuthService extends AuthConfig implements OnDestroy {
     return this.loadDiscoveryDocumentAndTryLogin(options).then(_ => {
       if (!this.hasValidIdToken() || !this.hasValidAccessToken()) {
         if (this.responseType === 'code') {
-          this.initCodeFlow();
+          this.initCodeFlow(options.state);
         } else {
-          this.initImplicitFlow();
+          this.initImplicitFlow(options.state);
         }
         return false;
       } else {
